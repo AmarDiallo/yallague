@@ -19,10 +19,10 @@ class UserTableSeeder extends Seeder
         DB ::table('users')->insert([
             'name' => 'Admin',
             'email' => 'admin@yallagueshop.com',
-            'phone' => '623419147',
+            'phone' => '620388989',
             'role' => 'admin',
             'state' => true,
-            'password' => Hash::make('yayemoud')
+            'password' => Hash::make('Admin@2022')
         ]);
     }
 }
