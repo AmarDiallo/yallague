@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('name', 'DESC')->get();
+        $categories = Category::orderBy('name', 'ASC')->where('deleted_at', null)->get();
         return response()->json($categories,200);
     }
 

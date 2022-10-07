@@ -15,7 +15,11 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $subCat = SubCategory::orderBy('name', 'DESC')->get();
+        $subCat = SubCategory::orderBy('sub_categories.name', 'ASC')
+            ->where('sub_categories.deleted_at', null)
+            ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
+            ->select('sub_categories.*', 'categories.name as name_category')
+            ->get();
         return response()->json($subCat,200);
     }
 
