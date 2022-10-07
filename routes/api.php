@@ -26,6 +26,8 @@ Route::middleware(['cors'])->group(function () {
     Route::middleware('auth:sanctum')->group(function() {
         Route::post("/register", [UserController::class, 'createUser']);
         Route::get("/users", [UserController::class, "getUsers"]);
+        Route::put("/users/{id}/update", [UserController::class, "editUser"]);
+        Route::put("/users/{id}/delete", [UserController::class, "deleteUser"]);
     
         Route::prefix('/category')->group(function() {
             Route::get('', [CategoryController::class, 'index']);

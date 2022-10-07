@@ -38,7 +38,9 @@ class UserController extends Controller
     {
         try 
         {
-            $users = User::all();
+            $users = User::where('role', 'seller')
+                ->where('state', true)
+                ->get();
 
             return response()->json($users, 200);
         }
@@ -59,22 +61,93 @@ class UserController extends Controller
     {
         try 
         {
-            $request->validate(['name' => 'required']);
+            $request->validate([
+                'name'  =>  'required',
+                'phone'  =>  'required',
+            ],[
+                'name.required' =>  'Le nom est obligatoire',
+                'quantity.required' =>  'Le numéro de téléphone est obligatoire',
+            ]);
     
             $user = new User;
-            $user->name = $request->name;
-            $user->phone = $request->phone;
-            $user->email = $request->email;
-            $user->role = $request->role;
+            $user->name = request()->name;
+            $user->phone = request()->phone;
+            $user->role = 'seller';
+            $user->email = request()->phone;
             $user->state = true;
-            $user->password = Hash::make($request->name);
+            $user->password = Hash::make('Yallague@2022');
             $user->save();
     
             $response = [
                 'data' => $user,
-                'message' => $user->name. " ajoutée avec succès." 
+                'message' => $user->name. " ajouté avec succès." 
             ];
             return response()->json($response);
+        }
+        catch(ErrorException $e)
+        {
+            header("error", true, 422);
+            return response()->json($e->getMessage(), 422);
+        }
+    }
+
+    function editUser(Request $request, $id) 
+    {
+        try 
+        {
+            $request->validate([
+                'name'  =>  'required',
+                'phone'  =>  'required',
+            ],[
+                'name.required' =>  'Le nom est obligatoire',
+                'quantity.required' =>  'Le numéro de téléphone est obligatoire',
+            ]);
+
+            $user = User::find($id);
+            if($user) {
+                $user->name = request()->name;
+                $user->phone = request()->phone;
+                $user->role = 'seller';
+                $user->email = request()->phone;
+                $user->state = true;
+                $user->password = Hash::make('Yallague@2022');
+                if($user->update()) {
+                    $response = [
+                        'data' => $user,
+                        'message' => $user->name. " Modifé avec succès." 
+                    ];
+                    return response()->json($response);
+                }
+                throw new ErrorException("Erreur de traitement.");
+            }
+            throw new ErrorException("Cet utilisateur n'exsite pas.");
+    
+        }
+        catch(ErrorException $e)
+        {
+            header("error", true, 422);
+            return response()->json($e->getMessage(), 422);
+        }
+    }
+
+    function deleteUser(Request $request, $id) 
+    {
+        try 
+        {
+            $user = User::find($id);
+            if($user) {
+                $user->state = false;
+                if($user->update()) {
+                    $response = [
+                        'data' => $user,
+                        'message' => $user->name. " bloqué avec succès." 
+                    ];
+                    return response()->json($response);
+                }
+                throw new ErrorException("Erreur de traitement.");
+            }
+            throw new ErrorException("Cet utilisateur n'exsite pas.");
+    
         }
         catch(ErrorException $e)
         {
