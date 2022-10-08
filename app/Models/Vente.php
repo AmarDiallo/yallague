@@ -20,7 +20,7 @@ class Vente extends Model
         $this->amount = $amount;
         $this->quantity = $quantity;
         $this->id_sub_category = $id_sub_category;
-        // $this->id_user = $id_user;
+        $this->id_user = auth()->user()->id;
     }
 
     public function sub_category()
