@@ -44,7 +44,7 @@ Route::middleware(['cors'])->group(function () {
             Route::put('/{id}/update', [SubCategoryController::class, 'update']);
             Route::delete('/{id}/delete', [SubCategoryController::class, 'destroy']);
             Route::put('/{id}/restore', [SubCategoryController::class, 'restore']);
-            Route::put('/{id}/by-category', [SubCategoryController::class, 'getSubCategoriesByIdCat']);
+            Route::get('/{id}/by-category', [SubCategoryController::class, 'getSubCategoriesByIdCat']);
         });
 
         Route::prefix('/vente')->group(function() {
