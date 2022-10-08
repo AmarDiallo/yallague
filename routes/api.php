@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\VenteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,12 @@ Route::middleware(['cors'])->group(function () {
             Route::put('/{id}/update', [SubCategoryController::class, 'update']);
             Route::delete('/{id}/delete', [SubCategoryController::class, 'destroy']);
             Route::put('/{id}/restore', [SubCategoryController::class, 'restore']);
+            Route::put('/{id}/by-category', [SubCategoryController::class, 'getSubCategoriesByIdCat']);
+        });
+
+        Route::prefix('/vente')->group(function() {
+            Route::get('', [VenteController::class, 'index']);
+            Route::post('/store', [VenteController::class, 'store']);
         });
     });
 });

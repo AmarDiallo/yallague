@@ -16,7 +16,12 @@ class VenteController extends Controller
      */
     public function index()
     {
-        $ventes = Vente::orderBy('created_at', 'DESC')->where('deleted_at', null)->get();
+        $ventes = Vente::orderBy('ventes.created_at', 'DESC')
+            ->where('ventes.deleted_at', null)
+            ->join('sub_categories', 'ventes.id_sub_category', '=', 'sub_categories.id')
+            ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
+            ->select('ventes.*', 'sub_categories.name as name_sub_ategory', 'categories.name as name_category')
+            ->get();
         return response()->json($ventes,200);
     }
 
@@ -35,14 +40,14 @@ class VenteController extends Controller
                 'quantity'  =>  'required',
                 'id_sub_category'  =>  'required',
             ],[
-                'amount.required' =>  'Le nom est obligatoire',
+                'amount.required' =>  'Le montant est obligatoire',
                 'quantity.required' =>  'La quantité est obligatoire',
                 'id_sub_category.required' =>  'Veuillez choisir une catégorie',
             ]);
 
             $id = request()->id_sub_category;
             $subCat = SubCategory::find($id);
-            $subCat->quantity = $subCat->quantity - request()->quantity;
+            $subCat->quantity = (int)($subCat->quantity) - request()->quantity;
             if($subCat->update())
             {
                 $vente = new Vente(request()->amount, request()->quantity, request()->id_sub_category);

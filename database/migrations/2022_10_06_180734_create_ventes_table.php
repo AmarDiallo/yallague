@@ -18,10 +18,12 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('amount');
             $table->unsignedBigInteger('id_sub_category');
+            $table->unsignedBigInteger('id_user');
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('id_sub_category')->references('id')->on('sub_categories');
+            $table->foreign('id_user')->references('id')->on('users');
         });
     }
 

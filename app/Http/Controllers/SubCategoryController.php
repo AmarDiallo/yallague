@@ -24,6 +24,19 @@ class SubCategoryController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubCategoriesByIdCat($id)
+    {
+        $subCat = SubCategory::where('id_category', $id)
+            ->where('deleted_at', null)
+            ->get();
+        return response()->json($subCat,200);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
