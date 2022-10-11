@@ -47,6 +47,9 @@ class VenteController extends Controller
 
             $id = request()->id_sub_category;
             $subCat = SubCategory::find($id);
+            if(request()->quantity > (int)($subCat->quantity)) {
+                throw new ErrorException("Cette quantité n'est pas disponiblie dans le stock.");
+            }
             $subCat->quantity = (int)($subCat->quantity) - request()->quantity;
             if($subCat->update())
             {
