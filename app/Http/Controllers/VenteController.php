@@ -16,13 +16,28 @@ class VenteController extends Controller
      */
     public function index()
     {
-        $ventes = Vente::orderBy('ventes.created_at', 'DESC')
+        $user = auth()->user();
+        if($user->role == 'admin') {
+            $ventes = Vente::orderBy('ventes.created_at', 'DESC')
+                ->where('ventes.deleted_at', null)
+                ->join('sub_categories', 'ventes.id_sub_category', '=', 'sub_categories.id')
+                ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
+                ->join('users', 'ventes.id_user', '=', 'users.id')
+                ->select('ventes.*', 'sub_categories.name as name_sub_ategory', 'categories.name as name_category', 'users.name as u_name', 'users.role as u_role')
+                ->paginate(20);
+            return response()->json($ventes,200);
+        } 
+        else 
+        {
+            $ventes = Vente::orderBy('ventes.created_at', 'DESC')
             ->where('ventes.deleted_at', null)
+            ->where('ventes.id_user', $user->id)
             ->join('sub_categories', 'ventes.id_sub_category', '=', 'sub_categories.id')
             ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
             ->select('ventes.*', 'sub_categories.name as name_sub_ategory', 'categories.name as name_category')
-            ->get();
-        return response()->json($ventes,200);
+            ->paginate(20);
+            return response()->json($ventes,200);
+        }
     }
 
     /**
